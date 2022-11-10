@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  bastion:
+    build: bastion
+    expose:
+      - 2222
+    ports:
+      - "2222:2222"
+    environment:
+      - SUDO_ACCESS=false
+      - PASSWORD_ACCESS=true
+      - USER_NAME=testuser
+      - USER_PASSWORD=testuser
+
+    restart: unless-stopped
+
