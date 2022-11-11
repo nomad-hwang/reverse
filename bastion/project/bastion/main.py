@@ -6,9 +6,6 @@ from bastion.config import settings
 from bastion.database.database import Base, engine
 
 def create_app() -> FastAPI:
-    Base.metadata.drop_all(bind=engine)
-    Base.metadata.create_all(bind=engine)
-    
     app = FastAPI()
     # app.add_middleware(
     #     CORSMiddleware,

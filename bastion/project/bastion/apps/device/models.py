@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 
-from bastion.database.database import Base
+from bastion.core.model import Base
 
 
 class Device(Base):
