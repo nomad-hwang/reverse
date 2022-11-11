@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from bastion.core.model import Base
+from bastion.database.model import Base
 # Must import each model here
 from bastion.apps.device.models import Device
 target_metadata = Base.metadata
