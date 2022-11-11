@@ -9,10 +9,10 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /app
-ADD Pipfile Pipfile.lock /app/
+ADD ./project/Pipfile ./project/Pipfile.lock /app/
 RUN pip3 install pipenv && pipenv install --system --deploy
 
-ADD . /app
+ADD ./project /app
 
 CMD ["/bin/sh", "-c", "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 /usr/bin/python /app/bastion/main.py"]
 
