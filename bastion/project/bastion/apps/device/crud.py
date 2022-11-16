@@ -1,36 +1,41 @@
+from bastion.apps.device.linux_user.exceptions import UserExists, UserNotFound
+from bastion.apps.device.linux_user.service import LinuxUserService
+from bastion.apps.device.models import Device as DeviceORM
+from bastion.apps.device.schemas import Device, DeviceCreate, DeviceUpdate
+from bastion.database.crud import CRUDBase
 from sqlalchemy.orm import Session
 
-from bastion.apps.device.linux_user.exceptions import UserNotFound
-from bastion.apps.device.linux_user.service import LinuxUserService
-from bastion.apps.device.schemas import Device, DeviceCreate, DeviceUpdate
-from bastion.apps.device.models import Device as DeviceORM
-from bastion.database.crud import CRUDBase
 
-
-class DeviceCrud(CRUDBase[Device, DeviceCreate, DeviceUpdate]):
+class DeviceCrud(CRUDBase[DeviceORM, DeviceCreate, DeviceUpdate]):
     def __init__(self):
         super().__init__(DeviceORM)
         self._linux = LinuxUserService()
 
-    def create(self, db: Session, *, dto: DeviceCreate) -> Device:
-        self._linux.create(dto.name, dto.ssh_key)
-        return super().create(db, obj_in=dto)
+    def create(self, db: Session, *, dto: DeviceCreate) -> DeviceORM:
+        try:
+            ret = super().create(db, obj_in=dto)
+            self._linux.create(dto.name, dto.ssh_key)
+            return ret
+        except:
+            if not self._linux.user_exists(dto.name):
+                self._linux.create(dto.name, dto.ssh_key)
+            raise UserExists
 
-    def get_by_name(self, db: Session, *, name: str) -> Device:
+    def get_by_name(self, db: Session, *, name: str) -> DeviceORM:
         ret = db.query(self._model).filter(self._model.name == name).first()
         if ret is None:
             raise UserNotFound
         self._sync(ret)
         return ret
 
-    def get_by_alias(self, db: Session, *, alias: str) -> Device:
+    def get_by_alias(self, db: Session, *, alias: str) -> DeviceORM:
         ret = db.query(self._model).filter(self._model.alias == alias).first()
         if ret is None:
             raise UserNotFound
         self._sync(ret)
         return ret
 
-    def update(self, db: Session, *, name: str, obj_in: DeviceUpdate) -> Device:
+    def update(self, db: Session, *, name: str, obj_in: DeviceUpdate) -> DeviceORM:
         return super().update(db, db_obj=self.get_by_name(db, name=name), obj_in=obj_in)
 
     def _sync(self, device: Device | None) -> None:

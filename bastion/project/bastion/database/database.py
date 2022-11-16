@@ -1,10 +1,10 @@
+from bastion.config import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from bastion.config import settings
-
 engine = create_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 def get_db():
     db = SessionLocal()
@@ -12,4 +12,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

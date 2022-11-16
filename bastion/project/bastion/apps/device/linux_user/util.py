@@ -12,30 +12,30 @@ from bastion.apps.device.linux_user.exceptions import (
 def adduser(username: str, group: str, shell: str) -> None:
     if user(username):
         raise UserExists
-    cmd(
-        f"adduser --disabled-password --gecos '' --home /home/{group}/{username} --shell {shell} --ingroup {group} {username}"
-    )
+
+    cmd(f"useradd -m {username} -s /bin/true")
+    cmd(f"passwd -d {username}")  # Remove password
 
 
 def register_ssh_key(username: str, group: str, key: str) -> None:
     user(username, raise_on_not_found=True)
-    os.makedirs(f"/home/{group}/{username}/.ssh", exist_ok=True)
-    with open(f"/home/{group}/{username}/.ssh/authorized_keys", "w") as f:
-        f.write(key)
+    os.makedirs(f"/home/{username}/.ssh", exist_ok=True)
+    cmd(f"echo '{key}' > /home/{username}/.ssh/authorized_keys")
 
 
 def get_ssh_key(username: str) -> str:
     user(username, raise_on_not_found=True)
     with open(f"/home/{username}/.ssh/authorized_keys", "r") as f:
-        return f.read()
+        return f.read().strip()
 
 
 def create_group(groupname: str) -> None:
-    try:
-        grp.getgrnam(groupname)  # check if group exists
-    except KeyError:
-        if os.system(f"groupadd {groupname}"):
-            raise UserBaseError
+    # try:
+    #     grp.getgrnam(groupname)  # check if group exists
+    # except KeyError:
+    #     if os.system(f"addgroup {groupname}"):
+    #         raise UserBaseError
+    pass
 
 
 def user(username: str, raise_on_not_found=False) -> pwd.struct_passwd | None:

@@ -14,9 +14,9 @@ class Config(BaseSettings):
     INITIAL_ADMIN_PASSWORD: str
 
     # BACKEND_CORS_ORIGINS: list[str]
-    
+
     DATABASE_URL: str
-    MIGRATION_URL: str # URL for migration purpose (in case for using docker)
+    MIGRATION_URL: str  # URL for migration purpose (in case for using docker)
 
     class Config:
         env_file = BASE_DIR / ".env"

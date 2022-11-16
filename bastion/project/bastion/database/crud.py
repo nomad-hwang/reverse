@@ -1,9 +1,8 @@
 from typing import Generic, Type, TypeVar
 
+from bastion.database.model import Base
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
-from bastion.database.model import Base
 
 ModelT = TypeVar("ModelT", bound=Base)
 CreateSchemaT = TypeVar("CreateSchemaT", bound=BaseModel)

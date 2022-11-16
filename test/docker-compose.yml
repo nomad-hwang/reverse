@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  ssh:
+    build: ./ssh
+    volumes:
+      - ./ssh:/root/.ssh
+    ports:
+      - "22222:22"

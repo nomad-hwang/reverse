@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Session
-
 from bastion.apps.device.crud import DeviceCrud
 from bastion.apps.device.schemas import Device, DeviceCreate, DeviceUpdate
+from sqlalchemy.orm import Session
 
 
 class DeviceService(object):
@@ -9,10 +8,10 @@ class DeviceService(object):
         self._crud = DeviceCrud()
 
     def create_device(self, db: Session, *, dto: DeviceCreate) -> Device:
-        return self._crud.create(db, dto=dto)
+        return Device(**self._crud.create(db, dto=dto).dict())
 
     def update_device(self, db: Session, *, name: str, dto: DeviceUpdate) -> Device:
-        return self._crud.update(db, name=name, obj_in=dto)
+        return Device(**self._crud.update(db, name=name, obj_in=dto).dict())
 
     def set_ssh_key(self, db: Session, *, name: str, ssh_key: str) -> None:
         self._crud.update(db, name=name, obj_in=DeviceUpdate(ssh_key=ssh_key))
@@ -26,4 +25,4 @@ class DeviceService(object):
     def get_all_devices(
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> list[Device]:
-        return self._crud.gets(db, skip=skip, limit=limit)
+        return [Device(**x.dict()) for x in self._crud.gets(db, skip=skip, limit=limit)]

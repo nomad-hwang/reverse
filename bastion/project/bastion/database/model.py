@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
+
 @as_declarative()
 class Base:
     id = Column(Integer, primary_key=True, index=True)
@@ -14,7 +15,13 @@ class Base:
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
-    
+
+
+class DictMixin:
+    def dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
 # from sqlalchemy import MetaData
 # POSTGRES_INDEXES_NAMING_CONVENTION = {
 #     "ix": "%(column_0_label)s_idx",

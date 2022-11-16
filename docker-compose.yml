@@ -5,22 +5,35 @@ services:
     build: bastion
     restart: always
     ports:
-      - "2222:2222"
-      - "8080:8080"
+      - "2222:22"
+      - "8080:8080"    
+    volumes:
+      - ./.data/bastion/home:/home
     environment:
       - SUDO_ACCESS=false
-      - PASSWORD_ACCESS=false
-    env_file: .env
+      - PASSWORD_ACCESS=false=value
     depends_on:
       - db
+
+  # proxy:
+  #   build: proxy
+  #   restart: always
+  #   ports: 
+  #     - "443:443"
+  #   volumes:
+  #     - ./.data/proxy/certs:/etc/nginx/certs
+  #   env_file: .env
+  #   depends_on:
+  #     - db
+  #     - bastion
 
   db:
     image: mariadb:10.3-focal
     restart: always
     volumes:
-      - ./data/db/conf.d:/etc/mysql/conf.d
-      - ./data/db/data:/var/lib/mysql
-      - ./data/db/initdb.d:/docker-entrypoint-initdb.d
+      - ./.data/db/conf.d:/etc/mysql/conf.d
+      - ./.data/db/data:/var/lib/mysql
+      - ./.data/db/initdb.d:/docker-entrypoint-initdb.d
     env_file: .env
     expose:
       - 3306
@@ -31,3 +44,6 @@ services:
       interval: 60s
       timeout: 5s
       retries: 5
+
+  
+      

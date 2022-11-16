@@ -1,8 +1,8 @@
+from bastion.apps import api_router
+from bastion.config import settings
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from bastion.apps import api_router
-from bastion.config import settings
 
 def create_app() -> FastAPI:
     app = FastAPI()
