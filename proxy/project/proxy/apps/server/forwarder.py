@@ -2,8 +2,7 @@ import asyncio
 import logging
 import weakref
 
-from core.proxy_server.util.resolver import BaseResolver
-from core.proxy_server.util.ssl import SSLContextBuilder
+from proxy.apps.resolver.resolver import BaseResolver
 
 
 class ForwarderMixin(object):
@@ -17,16 +16,10 @@ class ForwarderMixin(object):
         writer: asyncio.StreamWriter,
     ):
         try:
-            up_host, up_port = await resolver.resolve(
-                writer.get_extra_info("ssl_object")
-            )
-
-            self._logger.debug(
-                f"[{id(writer)} Fowarding from {writer.get_extra_info('peername')} to ({up_host}, {up_port})"
-            )
-
             try:
-                up_reader, up_writer = await asyncio.open_connection(up_host, up_port)
+                up_reader, up_writer = await resolver.connect_upstream(
+                    writer.get_extra_info("ssl_object")
+                )
             except Exception as e:
                 self._logger.error(f"[{id(writer)} Failed to connect to upstream: {e}")
                 writer.transport.abort()

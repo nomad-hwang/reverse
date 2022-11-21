@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ENDPOINT="http://localhost:8080"
-ENDPOINT_SSH="localhost"
+ENDPOINT="device.exmple.com"
+ENDPOINT_API_PORT="2223"
 ENDPOINT_SSH_PORT="2222"
 
 DEVICE_NAME="$(cat /etc/machine-id)"
@@ -26,7 +26,7 @@ fi
 register_device() {
     echo "Registering device..."
     curl -X 'POST' \
-    "${ENDPOINT}/api/v1/device" \
+    "${ENDPOINT}:${ENDPOINT_API_PORT}/api/v1/device" \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -40,7 +40,7 @@ while true; do
     register_device
     echo
     echo "Connecting to the server ${ENDPOINT_SSH}:${ENDPOINT_SSH_PORT} as ${DEVICE_NAME}"
-    ssh -N -R0 ${DEVICE_NAME}@${ENDPOINT_SSH} -p ${ENDPOINT_SSH_PORT} -i ${PRI_KEY_PATH} -o StrictHostKeyChecking=no
+    ssh -N -R0 ${DEVICE_NAME}@${ENDPOINT} -p ${ENDPOINT_SSH_PORT} -i ${PRI_KEY_PATH} -o StrictHostKeyChecking=no
 
     echo "Disconnected from the server. Retrying in 10 seconds..."
     sleep 10

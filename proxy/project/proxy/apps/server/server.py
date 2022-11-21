@@ -2,9 +2,9 @@ import asyncio
 import ssl
 from typing import Set
 
-from core.proxy_server.forwarder import ForwarderMixin
-from core.proxy_server.util.resolver import BaseResolver
-from core.proxy_server.util.ssl import SSLContextBuilder
+from proxy.apps.resolver import BaseResolver
+from proxy.apps.server.forwarder import ForwarderMixin
+from proxy.apps.server.util.ssl import SSLContextBuilder
 
 
 class ForwardServer(ForwarderMixin):

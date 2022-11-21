@@ -2,5 +2,6 @@ from pydantic import BaseModel
 
 
 class Tunnel(BaseModel):
-    user: str
+    name: str
     port: int
+    protocol: str
