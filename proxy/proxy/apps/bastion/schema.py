@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Tunnel(object):
     name: str
+    host: str
     port: int
     protocol: str
 
