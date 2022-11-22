@@ -1,6 +1,6 @@
 import asyncio
-
 import aiohttp
+from cache import AsyncTTL
 from proxy.apps.bastion.schema import Device, Tunnel
 from proxy.config import config
 
@@ -9,19 +9,19 @@ from proxy.config import config
 URL = f"http://{config.BASTION_API_HOST}:{config.BASTION_API_PORT}"
 
 
+@AsyncTTL(time_to_live=2)
 async def get_port(name: str, protocol: str = "tcp") -> int:
     for tunnel in await get_open_tunnels():
         if tunnel.name == name and tunnel.protocol == protocol:
             return tunnel.port
-    raise ValueError(f"Device '{name}' not found")
+    raise ValueError(f"Device '{name}' not found or not open")
 
 
+@AsyncTTL(time_to_live=5)
 async def get_open_tunnels() -> list[Tunnel]:
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{URL}/api/v1/tunnel") as resp:
-            ret = await resp.json()
-            print(ret)
-            return [Tunnel(**tunnel) for tunnel in ret]
+            return [Tunnel(**tunnel) for tunnel in await resp.json()]
 
 
 async def get_all_device() -> list[Device]:

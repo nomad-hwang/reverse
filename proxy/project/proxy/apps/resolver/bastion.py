@@ -1,8 +1,8 @@
 import logging
 from asyncio import StreamReader, StreamWriter
-from typing import List, Tuple
+from typing import List
 
-from proxy.apps.bastion.bastion import get_all_device, get_open_tunnels, get_port
+from proxy.apps.bastion.bastion import get_port
 from proxy.apps.resolver import resolver
 from proxy.apps.socks5.socks5 import create_connection
 from proxy.config import config
@@ -27,11 +27,11 @@ class SSHBastionResolver(resolver.BaseResolver):
         url = sni.split(self._base_domain)[0].rstrip(".")
         target = url.split(".")[-1]
 
-        self._logger.info(f"Connecting to '{target}' Tunnel")
-
         port = 8000
         if alpn == "":
             port = 22
+
+        self._logger.info(f"Requesting connection to port {port} on device '{target}'")
 
         return await create_connection(
             socks_host=config.BASTION_TUNNEL_HOST,
@@ -42,5 +42,4 @@ class SSHBastionResolver(resolver.BaseResolver):
 
     @property
     def accepted_protocols(self) -> List[str]:
-        # return ["http/1.1", "h2", ""]
         return []

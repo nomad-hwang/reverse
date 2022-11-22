@@ -6,8 +6,13 @@ name = "pypi"
 [packages]
 aiohttp = "*"
 python-socks = {extras = ["asyncio"], version = "*"}
+async-cache = "*"
 
 [dev-packages]
+isort = "*"
+black = "*"
+mypy = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.10"

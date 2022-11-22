@@ -1,12 +1,8 @@
 import asyncio
 import logging
 
-from proxy.apps.resolver.bastion_resolver import SSHBastionResolver
+from proxy.apps.resolver.bastion import SSHBastionResolver
 from proxy.apps.server import server
-from util import aio
-
-# import os
-# from time import sleep
 
 
 BASE_DOMAIN = "device.dawoon.com"
@@ -24,7 +20,6 @@ if __name__ == "__main__":
     )
 
     loop = asyncio.new_event_loop()
-    # aio.setup_graceful_shutdown(loop)
 
     try:
         args = [HOST, PORT, CERT, PRIV, SSHBastionResolver(BASE_DOMAIN)]
