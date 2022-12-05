@@ -19,8 +19,7 @@ def get_devices(db: Session = Depends(get_db)):
 @api_router.post("", status_code=status.HTTP_201_CREATED, response_model=Device)
 @handle_http_exception
 def create_device(request: DeviceCreate, db: Session = Depends(get_db)):
-    ret = DeviceService().create_device(db, dto=request)
-    return ret
+    return DeviceService().create_device(db, dto=request)
 
 
 # @api_router.get("/{name}", status_code=status.HTTP_200_OK, response_model=Device)

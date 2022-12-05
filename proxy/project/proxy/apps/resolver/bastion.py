@@ -27,11 +27,13 @@ class SSHBastionResolver(resolver.BaseResolver):
         url = sni.split(self._base_domain)[0].rstrip(".")
         target = url.split(".")[-1]
 
-        port = 8000
-        if alpn == "":
-            port = 22
+        port = 22
+        if alpn == "http/1.1":
+            port = 4000
 
-        self._logger.info(f"Requesting connection to port {port} on device '{target}'")
+        self._logger.info(
+            f"Connecting to port {port}(alpn:{alpn}) on device '{target}'({sni})"
+        )
 
         return await create_connection(
             socks_host=config.BASTION_TUNNEL_HOST,
@@ -42,4 +44,5 @@ class SSHBastionResolver(resolver.BaseResolver):
 
     @property
     def accepted_protocols(self) -> List[str]:
-        return []
+        # HTTP/1.1, HTTP/2, gRPC, websocket, etc
+        return ["http/1.1", "h2", "h3", "grpc", "websocket"]
