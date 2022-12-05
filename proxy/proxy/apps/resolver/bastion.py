@@ -5,7 +5,7 @@ from typing import List
 from proxy.apps.bastion.bastion import get_port
 from proxy.apps.resolver import resolver
 from proxy.apps.socks5.socks5 import create_connection
-from proxy.config import config
+from proxy.config import settings
 
 
 class SSHBastionResolver(resolver.BaseResolver):
@@ -36,7 +36,7 @@ class SSHBastionResolver(resolver.BaseResolver):
         )
 
         return await create_connection(
-            socks_host=config.BASTION_TUNNEL_HOST,
+            socks_host=settings.BASTION_TUNNEL_HOST,
             socks_port=await get_port(target),
             host="127.0.0.1",
             port=port,

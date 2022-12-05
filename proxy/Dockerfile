@@ -4,7 +4,7 @@ EXPOSE 80
 
 WORKDIR /app
 
-ADD ./project/Pipfile ./project/Pipfile.lock /app/
+ADD ./Pipfile ./Pipfile.lock /app/
 RUN pip3 install pipenv && pipenv install --system --deploy
 
 ADD ./project /app

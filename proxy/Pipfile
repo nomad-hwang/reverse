@@ -7,6 +7,7 @@ name = "pypi"
 aiohttp = "*"
 python-socks = {extras = ["asyncio"], version = "*"}
 async-cache = "*"
+pydantic = "*"
 
 [dev-packages]
 isort = "*"
